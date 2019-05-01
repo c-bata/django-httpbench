@@ -5,7 +5,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 
 setup(
-    name='django-httpbench',
+    name='djangohttpbench',
     version='0.0.1',
     packages=['httpbench'],
     description='HTTP load testing tools for Django. Like an apache bench '
