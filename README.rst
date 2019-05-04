@@ -4,28 +4,20 @@ django-httpbench
 HTTP load testing tools for Django.
 Like an apache bench but requests are sent from authenticated users without having to know their password.
 
-Usage
------
-
-Requirements
-~~~~~~~~~~~~
-
-Supported python versions are python 3.6 or later.
-
-* django (>= 2.0)
-* requests
-
 Installation
-~~~~~~~~~~~~
+------------
+
+django-httpbench requires python 3.6 or later and Django 2.0 or later.
 
 .. code-block:: console
 
    $ python3 -m pip install djangohttpbench
 
-PyPI
-~~~~
 
-* PyPI: https://pypi.org/project/djangohttpbench/
+https://pypi.org/project/djangohttpbench/
+
+Usage
+-----
 
 HeaderAuthBackend
 ~~~~~~~~~~~~~~~~~
@@ -55,14 +47,14 @@ This backend is useful for testing scenarios.
    $ curl -H 'X-USERNAME: c-bata' https://localhost:8000/path/to/page/require/auth
 
 
-'httpbench' management command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``httpbench`` management command
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `httpbench` management command acts like an apache bench but requests are sent from authenticated users.
 
 .. code-block:: console
 
-   $ python manage.py httpbench -n 1000 -c 50 \
+   $ python3 manage.py httpbench -n 1000 -c 50 \
    > --username c-bata \
    > https://localhost:8000/
    Response time:
@@ -83,6 +75,6 @@ Development
 * test: ``tox -e py37`` or ``DJANGO_SETTINGS_MODULE=test_settings python -m django test``
 
 License
-~~~~~~~
+-------
 
 This software is licensed under the MIT License (See `LICENSE <./LICENSE>`_ ).

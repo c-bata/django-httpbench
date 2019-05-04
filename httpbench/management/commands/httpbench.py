@@ -87,7 +87,7 @@ class Command(BaseCommand):
                             help='Number of multiple requests to make at a time')
         parser.add_argument('-n', '--requests', type=int, default=100,
                             help='Number of requests to perform')
-        parser.add_argument('--username', help='Login username')
+        parser.add_argument('-u', '--username', help='Login username')
 
     def handle(self, *args, **options):
         throttle_rate: int = options.get('throttle')
