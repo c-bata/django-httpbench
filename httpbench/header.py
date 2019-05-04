@@ -18,8 +18,8 @@ def _make_header_wsgi_env_key(http_header: str) -> str:
 
 
 def get_username_header_key() -> str:
-    if hasattr(settings, 'LOAD_USERNAME_KEY'):
-        return settings.LOAD_USERNAME_KEY
+    if hasattr(settings, 'HTTP_BENCH_USERNAME_KEY'):
+        return settings.HTTP_BENCH_USERNAME_KEY
     return DEFAULT_USERNAME_KEY
 
 
