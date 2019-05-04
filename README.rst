@@ -7,7 +7,8 @@ Like an apache bench but requests are sent from authenticated users without havi
 Usage
 -----
 
-Requirements:
+Requirements
+~~~~~~~~~~~~
 
 Supported python versions are python 3.6 or later.
 
@@ -15,10 +16,16 @@ Supported python versions are python 3.6 or later.
 * requests
 
 Installation
+~~~~~~~~~~~~
 
 .. code-block:: console
 
-   $ python3 -m pip install django-httpbench
+   $ python3 -m pip install djangohttpbench
+
+PyPI
+~~~~
+
+* PyPI: https://pypi.org/project/djangohttpbench/
 
 HeaderAuthBackend
 ~~~~~~~~~~~~~~~~~
@@ -55,24 +62,11 @@ This backend is useful for testing scenarios.
    > --username c-bata \
    > --url https://localhost:8000/
 
-Contributing
-------------
+Development
+-----------
 
-Flake8
-~~~~~~
-
-.. code-block:: console
-
-   $ flake8
-
-
-Run unittests
-~~~~~~~~~~~~~
-
-.. code-block:: console
-
-   $ DJANGO_SETTINGS_MODULE=test_settings python -m django test
-
+* lint: ``tox -e flake8`` or ``flake8``
+* test: ``tox -e py37`` or ``DJANGO_SETTINGS_MODULE=test_settings python -m django test``
 
 License
 ~~~~~~~
