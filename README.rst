@@ -45,6 +45,10 @@ This backend is useful for testing scenarios.
         'httpbench.middlewares.HeaderAuthMiddleware',
     ]
 
+    AUTHENTICATION_BACKENDS += [
+        'httpbench.backends.UsernameBackend',
+    ]
+
 
 .. code-block:: console
 
