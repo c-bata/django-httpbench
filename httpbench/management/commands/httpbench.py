@@ -8,21 +8,28 @@ from httpbench.throttle import Throttle
 from typing import Iterator, Tuple
 
 HEADER_KEY = get_username_header_key()
-TIMEOUT = 30
+DEFAULT_TIMEOUT = 30
 
 
-def fetch(url: str, username: str = None) -> (int, bool, float):
+def fetch(url: str,
+          username: str = None,
+          timeout: int = None,
+          throttle: Throttle = None) -> (int, bool, float):
     """Send a http GET request.
 
     :return: (status_code, fail, elapsed)
     """
+    if throttle:
+        throttle.consume()
     start = time.time()
+    if not timeout:
+        timeout = DEFAULT_TIMEOUT
     try:
         if username:
-            res = requests.get(url, timeout=TIMEOUT, allow_redirects=False,
+            res = requests.get(url, timeout=timeout, allow_redirects=False,
                                headers={HEADER_KEY: username})
         else:
-            res = requests.get(url, timeout=TIMEOUT, allow_redirects=False)
+            res = requests.get(url, timeout=timeout, allow_redirects=False)
     except requests.exceptions.Timeout:
         return 0, True, 0.0
     except requests.exceptions.ConnectionError:
@@ -30,15 +37,12 @@ def fetch(url: str, username: str = None) -> (int, bool, float):
     return res.status_code, False, time.time() - start
 
 
-def throttling_fetch(throttle: Throttle, url: str,
-                     username: str = None) -> (int, bool):
-    throttle.consume()
-    return fetch(url, username)
-
-
-def print_result(results: Iterator[Tuple[int, str]]):
+def print_result(results: Iterator[Tuple[int, str]],
+                 initial_min: int = None):
     cnt_req, cnt2xx, cnt3xx, cnt4xx, cnt5xx, cnt_fail = 0, 0, 0, 0, 0, 0
-    min_2xx = TIMEOUT
+    if not initial_min:
+        initial_min = DEFAULT_TIMEOUT
+    min_2xx = initial_min
     max_2xx = 0
     total_response_time = 0
 
@@ -83,6 +87,8 @@ class Command(BaseCommand):
         parser.add_argument('url', nargs=1, help='Django server url')
         parser.add_argument('--throttle', type=int, default=0,
                             help='Throttling rate. Not throttling if given 0')
+        parser.add_argument('-s', '--timeout', type=int, default=30,
+                            help='Seconds to max. wait for each response.')
         parser.add_argument('-c', '--concurrency', type=int, default=10,
                             help='Number of multiple requests to make at a time')
         parser.add_argument('-n', '--requests', type=int, default=100,
@@ -94,20 +100,16 @@ class Command(BaseCommand):
         concurrency: int = options.get('concurrency')
         number_of_requests: int = options.get('requests')
         username: str = options.get('username')
+        timeout: int = options.get('timeout')
         url: str = options.get('url')
-
-        throttle: Throttle = None
-        if throttle_rate > 0:
-            throttle = Throttle(throttle_rate)
 
         with ThreadPoolExecutor(concurrency) as pool:
             if throttle_rate > 0:
-                results = pool.map(
-                    lambda a: throttling_fetch(*a),
-                    [(throttle, url, username)
-                     for _ in range(number_of_requests)])
+                throttle = Throttle(throttle_rate)
+                tasks = [(throttle, url, username, timeout)
+                         for _ in range(number_of_requests)]
             else:
-                results = pool.map(
-                    lambda a: fetch(*a),
-                    [(url, username) for _ in range(number_of_requests)])
-        print_result(results)
+                tasks = [(url, username, timeout)
+                         for _ in range(number_of_requests)]
+            results = pool.map(lambda a: fetch(*a), tasks)
+        print_result(results, initial_min=timeout)
