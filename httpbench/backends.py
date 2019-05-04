@@ -8,13 +8,9 @@ class UsernameBackend:
         if not username:
             return None
         try:
-            user = UserModel.objects.get(username=username)
+            return UserModel.objects.get(username=username)
         except UserModel.DoesNotExist:
-            user = UserModel(username=username)
-            user.is_staff = False
-            user.is_superuser = False
-            user.save()
-        return user
+            return None
 
     def get_user(self, user_id):
         try:
