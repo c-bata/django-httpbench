@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
@@ -7,7 +7,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 setup(
     name='djangohttpbench',
     version='0.0.1',
-    packages=['httpbench'],
+    packages=find_packages(),
     description='HTTP load testing tools for Django. Like an apache bench '
                 'but requests are sent from authenticated users.',
     long_description=README,
