@@ -6,7 +6,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 
 setup(
     name='djangohttpbench',
-    version='0.0.2',
+    version='0.1.0',
     packages=find_packages(),
     description='HTTP load testing tools for Django. Like an apache bench '
                 'but requests are sent from authenticated users.',
