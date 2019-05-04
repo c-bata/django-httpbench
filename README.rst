@@ -62,9 +62,19 @@ This backend is useful for testing scenarios.
 
 .. code-block:: console
 
-   $ python manage.py httpbench \
+   $ python manage.py httpbench -n 1000 -c 50 \
    > --username c-bata \
-   > --url https://localhost:8000/
+   > https://localhost:8000/
+   Response time:
+     mean: 3.862 secs
+     min: 1.173 secs
+     max: 11.097 secs
+   Status:
+     2xx: 1000
+     3xx: 0
+     4xx: 0
+     5xx: 0
+     fail: 0
 
 Development
 -----------
