@@ -72,7 +72,7 @@ Development
 -----------
 
 * lint: ``tox -e flake8`` or ``flake8``
-* test: ``tox -e py37`` or ``DJANGO_SETTINGS_MODULE=test_settings python -m django test``
+* test: ``tox -e py37`` or ``python setup.py test --settings=test_settings``
 
 License
 -------

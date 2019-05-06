@@ -16,7 +16,7 @@ class DjangoTestCommand(TestCommand):
 
     def initialize_options(self):
         TestCommand.initialize_options(self)
-        self.settings = 'settings'
+        self.settings = ''
 
     def run_tests(self):
         # import here, cause outside the eggs aren't loaded
@@ -24,7 +24,8 @@ class DjangoTestCommand(TestCommand):
         from django.conf import settings
         from django.test.utils import get_runner
 
-        os.environ['DJANGO_SETTINGS_MODULE'] = self.settings
+        if self.settings:
+            os.environ['DJANGO_SETTINGS_MODULE'] = self.settings
         django.setup()
         TestRunner = get_runner(settings, test_runner_class=self.test_runner)
         test_runner = TestRunner()
