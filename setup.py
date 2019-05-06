@@ -1,9 +1,38 @@
 import os
+import sys
+
 from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
 
 BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(BASE_PATH, 'README.rst')) as f:
     README = f.read()
+
+
+class DjangoTestCommand(TestCommand):
+    user_options = TestCommand.user_options + [
+        ('settings=', None, "The Python path to a settings module"),
+    ]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.settings = 'settings'
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import django
+        from django.conf import settings
+        from django.test.utils import get_runner
+
+        os.environ['DJANGO_SETTINGS_MODULE'] = self.settings
+        django.setup()
+        TestRunner = get_runner(settings, test_runner_class=self.test_runner)
+        test_runner = TestRunner()
+        test_labels = [self.test_suite]
+        failures = test_runner.run_tests(test_labels)
+        if failures:
+            sys.exit(1)
+
 
 setup(
     name='djangohttpbench',
@@ -32,5 +61,8 @@ setup(
     install_requires=[
         'Django',
         'requests',
-    ]
+    ],
+    test_suite='httpbench.tests',
+    tests_require=[],
+    cmdclass={'test': DjangoTestCommand}
 )
